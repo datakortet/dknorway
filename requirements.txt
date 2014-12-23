@@ -1,5 +1,4 @@
 Django==1.5.11
-South
 
 py>=1.4.26
 pytest==2.6.3
