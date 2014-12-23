@@ -27,6 +27,7 @@ omit =
     setup.py
     tests/conftest.py
     dknorway/posten_postnrimport.py
+    dknorway/migrations/*
 
 ignore_errors = True
 
