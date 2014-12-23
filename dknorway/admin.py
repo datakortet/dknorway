@@ -6,7 +6,7 @@
 # pylint:disable=R0904
 # R0904: too many public methods in ModelAdmin.
 
-from datakortet.ajax.models import Fylke, Kommune, PostSted
+from .models import Fylke, Kommune, PostSted
 from django.contrib import admin
 
 
