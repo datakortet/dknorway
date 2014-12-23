@@ -26,6 +26,7 @@ omit =
     runtests.py
     setup.py
     tests/conftest.py
+    dknorway/posten_postnrimport.py
 
 ignore_errors = True
 
