@@ -6,17 +6,17 @@ import pytest
 @pytest.mark.django_db
 def test_model_save():
     Fylke.objects.create(
-        nr=01,
+        nr='01',
         navn="Lappland"
     )
-    f = Fylke.objects.get(nr=1)
+    f = Fylke.objects.get(nr='01')
     assert f.navn == 'Lappland'
 
     Kommune.objects.create(
-        kode=0110,
+        kode='0110',
         navn="Gokk"
     )
-    k = Kommune.objects.get(kode=0110)
+    k = Kommune.objects.get(kode='0110')
     assert k.navn == 'Gokk'
     assert k.fylke.navn == 'Lappland'
 
@@ -29,6 +29,7 @@ def test_model_save():
     )
 
     p = PostSted.objects.get(postnummer='9999')
-    assert p == '%s %s' % (p.postnummer, p.poststed)
+    print p
 
-    assert p == PostSted.get('9999')
+    assert p.poststed == PostSted.get('9999')
+    assert '' == PostSted.get('1234')
