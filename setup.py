@@ -37,6 +37,9 @@ class PyTest(Command):
 setup(
     name='dknorway',
     version=version,
+    url="https://github.com/datakortet/dknorway",
+    maintainer="Bjorn Pettersen",
+    maintainer_email="bp@datakortet.no",
     requires=[],
     install_requires=[
         'Django',
