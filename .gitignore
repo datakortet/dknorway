@@ -57,3 +57,4 @@ target/
 atlassian-ide-plugin.xml
 .idea/workspace.xml
 pypi-docs.zip
+.md5
