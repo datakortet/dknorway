@@ -1,4 +1,4 @@
-Django==1.5.11
+Django==1.5.4
 
 py>=1.4.26
 pytest==2.6.3
