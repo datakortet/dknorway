@@ -37,3 +37,6 @@ def test_model_save():
     assert '' == PostSted.get('1234')
 
     assert Fylke.for_postnr('9999').navn == 'Lappland'
+
+    with pytest.raises(Fylke.DoesNotExist):
+        Fylke.for_postnr('12345')

@@ -21,7 +21,10 @@ class Fylke(models.Model):
     def for_postnr(cls, postnr):
         """Returns the ``Fylke`` object for ``postnr``.
         """
-        return PostSted.objects.get(postnummer=postnr).kommune.fylke
+        try:
+            return PostSted.objects.get(postnummer=postnr).kommune.fylke
+        except PostSted.DoesNotExist:
+            raise cls.DoesNotExist
 
     def __unicode__(self):
         return self.navn
