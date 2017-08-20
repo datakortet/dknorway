@@ -17,6 +17,12 @@ class Fylke(models.Model):
     nr = models.CharField(max_length=2, primary_key=True)
     navn = models.CharField(max_length=40)
 
+    @classmethod
+    def for_postnr(cls, postnr):
+        """Returns the ``Fylke`` object for ``postnr``.
+        """
+        return PostSted.objects.get(postnummer=postnr).kommune.fylke
+
     def __unicode__(self):
         return self.navn
 

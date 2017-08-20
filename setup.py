@@ -42,7 +42,7 @@ setup(
     maintainer_email="bp@datakortet.no",
     requires=[],
     install_requires=[
-        'Django',
+        'Django==1.5.4',
         'South'
     ],
     description=__doc__.strip(),

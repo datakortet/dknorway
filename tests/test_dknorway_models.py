@@ -11,6 +11,7 @@ def test_model_save():
     )
     f = Fylke.objects.get(nr='01')
     assert f.navn == 'Lappland'
+    assert unicode(f) == 'Lappland'
 
     Kommune.objects.create(
         kode='0110',
@@ -19,6 +20,7 @@ def test_model_save():
     k = Kommune.objects.get(kode='0110')
     assert k.navn == 'Gokk'
     assert k.fylke.navn == 'Lappland'
+    assert unicode(k) == 'Gokk (Lappland)'
 
     PostSted.objects.create(
         postnummer='9999',
@@ -33,3 +35,5 @@ def test_model_save():
 
     assert p.poststed == PostSted.get('9999')
     assert '' == PostSted.get('1234')
+
+    assert Fylke.for_postnr('9999').navn == 'Lappland'

@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
-from unittest import TestCase
-import dknorway.models
+
+"""Test that all modules are importable.
+"""
+
 import dknorway.admin
+import dknorway.models
+import dknorway.posten_postnrimport
 import dknorway.postnrcache
 
-class TestImport(TestCase):
 
-    def test_dkmath_import(self):
-        assert dknorway.models
-        assert dknorway.admin
-        assert dknorway.postnrcache
+def test_import_():
+    "Test that all modules are importable."
+    
+    assert dknorway.admin
+    assert dknorway.models
+    assert dknorway.posten_postnrimport
+    assert dknorway.postnrcache
