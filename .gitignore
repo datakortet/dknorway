@@ -74,3 +74,5 @@ pypi-docs.zip
 .idea/mongoSettings.xml
 .idea/deployment.xml
 dknorway-testing.db
+.idea/markdown-navigator/*
+.idea/vagrant.xml
