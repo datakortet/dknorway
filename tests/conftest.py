@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
 
+import django
+
 DIRNAME = os.path.dirname(__file__)
 
 
@@ -39,3 +41,4 @@ def pytest_configure():
             #'myapp.tests',
         )
     )
+    django.setup()
