@@ -16,6 +16,8 @@ class Fylke(models.Model):
     "Model for all fylker in Norway."
     nr = models.CharField(max_length=2, primary_key=True)
     navn = models.CharField(max_length=40)
+    active = models.BooleanField(default=True)
+    note = models.CharField(max_length=255, null=True, blank=True)
 
     @classmethod
     def for_postnr(cls, postnr):
@@ -39,6 +41,8 @@ class Kommune(models.Model):
     "Model for all kommuner in Norway."
     kode = models.CharField(max_length=4)
     navn = models.CharField(max_length=30)
+    active = models.BooleanField(default=True)
+    note = models.CharField(max_length=255, null=True, blank=True)
 
     def __unicode__(self):
         return '%s (%s)' % (self.navn, self.fylke)
@@ -61,6 +65,8 @@ class PostSted(models.Model):
     kommune = models.ForeignKey(Kommune, null=True, blank=True)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+    note = models.CharField(max_length=255, null=True, blank=True)
 
     def __unicode__(self):
         return '%s %s' % (self.postnummer, self.poststed)
