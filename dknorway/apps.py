@@ -3,5 +3,5 @@ from django.apps import AppConfig
 
 
 class DkNorway(AppConfig):
-    name = 'DkNorway'.lower()
+    name = 'dknorway'
     verbose_name = 'DkNorway'

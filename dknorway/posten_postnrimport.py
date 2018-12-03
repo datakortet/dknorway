@@ -1,67 +1,176 @@
 # -*- coding: utf-8 -*-
-
-"""Importer posnr fra postens datafil (p.t. på
-   http://epab.posten.no/Norsk/Nedlasting/NedlastingMeny1.htm).
-
-   Filene endrer seg litt fra år til år, så denne importen må som regel
-   justeres for hver import.
-
-   Postnummerregister_ANSI.txt -filen ser ut til å være den vi ønsker.
+"""Importer postnr fra postens ofisielle URL.
 """
-
-
+from __future__ import print_function
+import sys, os
+import time
 import codecs
+import requests
+import argparse
+import django;django.setup()
 from django import template
-from .models import Kommune, PostSted
+from dknorway.models import Kommune, PostSted
+from dknorway import __version__
+
+CURDIR = os.path.dirname(__file__)
+DATAFILE_URL = "http://www.bring.no/radgivning/sende-noe/adressetjenester/postnummer/_attachment/615728?_ts=14fd0e1cc58?_download=true"
+DATAFILE_DIR = os.path.join(CURDIR, 'data')
+DATAFILE = os.path.join(DATAFILE_DIR, 'postnrdata.txt')
+ENCODING = 'utf-8'
 
 
-DATAFILE = 'data/postnummerregister_ansi.txt'
-ENCODING = 'cp1252'
+class NoData(Exception):
+    """No data to process.
+    """
 
 def split_line(line):
     return [item.strip() for item in line.split('\t')]
 
-def readfile():
-    """Yield all postnr from DATAFILE that we currently do not have in db.
+
+def datafile_exists():
+    if not os.path.exists(DATAFILE_DIR):
+        os.mkdir(DATAFILE_DIR)
+    return os.path.exists(DATAFILE)
+    
+
+def write_datafile(txt):
+    datafile_exists()
+    with open(DATAFILE, 'wb') as fp:
+        fp.write(txt.encode(ENCODING))
+
+def read_datafile():
+    datafile_exists()
+    with open(DATAFILE, 'rb') as fp:
+        return fp.read().decode(ENCODING)    
+
+
+def has_datafile_changed(txt):
+    if not datafile_exists():
+        # write_datafile(txt)
+        return True
+
+    previous = read_datafile()
+    changed = previous != txt
+    # if changed:
+    #    write_datafile(txt)
+    return changed
+
+
+def fetch_datafile(args):
+    """Download data file.
     """
-    #current = set(p.postnummer for p in PostSted.objects.all())
+    r = requests.get(DATAFILE_URL)
+    txt = r.text
+    if args.force or has_datafile_changed(txt):
+        lines = txt.splitlines()  # r.text is unicode
+        for line in lines:
+            postnr, sted, kkode, knavn, _ = split_line(line)
+            yield postnr, sted, kkode, knavn
 
-    for line in codecs.open(DATAFILE, encoding=ENCODING):
-        postnr, sted, kkode, knavn, _ = split_line(line)
-        yield postnr, sted, kkode, knavn
-
-
-def insert(postnr, sted, kkode, knavn):
-    "Insert the values in db (guaranteed to be new)."
-    p, _ = PostSted.objects.get_or_create(postnummer=postnr)
-    p.poststed = sted
-    p.kommune, _ = Kommune.objects.get_or_create(kode=kkode, navn=knavn)
-    p.save()
-    print p.postnummer
+        write_datafile(txt)
+    elif args.verbose:
+        print("data has not changed since last run (use --force to override)")
+        raise NoData()
 
 
-def create_posnrcache_py():
-    postnrs = [int(p) for p in
-               sorted(set(p.postnummer for p in PostSted.objects.all()))]
+def create_postnrcache_py(postnr):
+    postnrs = [int(p) for p in sorted(set(postnr))]
     t = template.Template(open('postnrcache.pytempl').read().decode('u8'))
     
-    fp = open('postnrcache.py', 'w')
-    fp.write(unicode(t.render(template.Context(locals()))).encode('u8'))
-    fp.close()
-    
+    with open('postnrcache.py', 'w') as fp:
+        fp.write(unicode(t.render(template.Context(locals()))).encode('u8'))
 
-def main():
-    "main()"
-    print 'starting insert...'
-    for i, v in enumerate(readfile()):
-        print i,
-        insert(*v)
-    print 'finished inserting.'
-    print 'starting postnrcache.py creation...'
-    create_posnrcache_py()
-    print 'finished.'
+
+def mark_inactive(args, poststeds):
+    for p in poststeds:
+        if args.verbose:
+            print("marking as inactive:", p.postnummer)
+        p.active = False
+        p.save()
+
+
+def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):
+    def get_kommune(kode, navn):
+        if kode not in knr_kommune:
+            if args.verbose:
+                print("new kommune:", kode, navn)
+            knr_kommune[kode] = Kommune.objects.create(kode=kode, navn=navn)
+        return knr_kommune[kode]
+
+    for postnr, sted, kkode, knavn in lines:
+        if postnr in postnr_poststed:  # update existing poststed
+            p = postnr_poststed[postnr]
+
+            if sted != p.poststed:
+                p.poststed = sted
+                p.save()
+                if args.verbose:
+                    print("updated poststed:", postnr, sted)
+
+            if not p.kommune:
+                p.kommune = get_kommune(kode=kkode, navn=knavn)
+                p.save()
+                if args.verbose:
+                    print("poststed was missing kommune:", p)
+                
+            if kkode != p.kommune.kode  or knavn != p.kommune.navn:
+                p.kommune.kode = kkode
+                p.kommune.navn = knavn
+                p.kommune.save()
+                if args.verbose:
+                    print("updated kommune:", postnr, sted, knavn)
+        
+        else:  # new poststed
+            postnr_poststed[postnr] = PostSted.objects.create(
+                postnummer=postnr,
+                poststed=sted,
+                kommune=get_kommune(kode=kkode, navn=knavn)
+            )
+            if args.verbose:
+                print("created new poststed:", postnr, sted, kkode, knavn)
+
+
+def process_new_file(args):
+    try:
+        lines = list(fetch_datafile(args))
+        current_poststed = PostSted.objects.filter(active=True)
+        current_kommune = Kommune.objects.filter(active=True)
+        current_postnr = {p.postnummer for p in current_poststed}
+        new_postnrs = {line[0] for line in lines}
+
+        inactive_postnr = current_postnr - new_postnrs
+        postnr_poststed = {p.postnummer: p for p in current_poststed}
+        inactive_poststed = [postnr_poststed[postnr] for postnr in sorted(inactive_postnr)]
+        mark_inactive(args, inactive_poststed)
+        for p in inactive_poststed:
+            del postnr_poststed[p.postnummer]
+        
+        add_and_update_poststeds(
+            args, 
+            lines, 
+            postnr_poststed,                        # will be updated
+            {k.kode: k for k in current_kommune}
+        )
+        create_postnrcache_py(postnr_poststed.keys())
+    except NoData:
+        pass
+
+
+def main(args=None):
+    start = time.time()
+    args = args or sys.argv[1:]
+    p = argparse.ArgumentParser()
+    p.add_argument('--version', action='version', version='%(prog)s ' + __version__)
+    p.add_argument('--verbose', '-v', action='store_true', help='verbose output')
+    p.add_argument('--force', '-f', action='store_true', help='force processing')
+
+    args = p.parse_args(args)
+    if args.verbose:
+        print("starting insert..")
+    process_new_file(args)
+    if args.verbose:
+        print("finished:", time.time() - start)
 
 
 if __name__ == "__main__":
     main()
-    #pass

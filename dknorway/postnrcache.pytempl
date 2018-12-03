@@ -1,0 +1,9 @@
+
+# pylint: disable=C0301
+
+"""Valid postnrs 2012-10-24 (okt. 24, 2012).
+"""
+
+valid_postnrs = [
+    {% for postnr in postnrs %}{{ postnr }}, {% endfor %}
+]
