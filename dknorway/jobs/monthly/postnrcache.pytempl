@@ -1,7 +1,7 @@
 
 # pylint: disable=C0301
 
-"""Valid postnrs 2012-10-24 (okt. 24, 2012).
+"""Valid postnrs.
 """
 
 valid_postnrs = [

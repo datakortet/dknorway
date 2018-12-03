@@ -11,10 +11,13 @@ import django;django.setup()
 from django import template
 from dknorway.models import Kommune, PostSted
 from dknorway import __version__
+import dknorway
+from django_extensions.management.jobs import MonthlyJob
 
 CURDIR = os.path.dirname(__file__)
+SRCDIR = os.path.dirname(dknorway.__file__)
 DATAFILE_URL = "http://www.bring.no/radgivning/sende-noe/adressetjenester/postnummer/_attachment/615728?_ts=14fd0e1cc58?_download=true"
-DATAFILE_DIR = os.path.join(CURDIR, 'data')
+DATAFILE_DIR = os.path.join(SRCDIR, 'data')
 DATAFILE = os.path.join(DATAFILE_DIR, 'postnrdata.txt')
 ENCODING = 'utf-8'
 
@@ -75,9 +78,10 @@ def fetch_datafile(args):
 
 def create_postnrcache_py(postnr):
     postnrs = [int(p) for p in sorted(set(postnr))]
-    t = template.Template(open('postnrcache.pytempl').read().decode('u8'))
+    with open(os.path.join(CURDIR, 'postnrcache.pytempl')) as fp:
+        t = template.Template(fp.read().decode('u8'))
     
-    with open('postnrcache.py', 'w') as fp:
+    with open(os.path.join(SRCDIR, 'postnrcache.py'), 'w') as fp:
         fp.write(unicode(t.render(template.Context(locals()))).encode('u8'))
 
 
@@ -151,9 +155,18 @@ def process_new_file(args):
             postnr_poststed,                        # will be updated
             {k.kode: k for k in current_kommune}
         )
-        create_postnrcache_py(postnr_poststed.keys())
+        create_postnrcache_py(PostSted.objects.filter(active=True).values_list('postnummer', flat=True))
     except NoData:
         pass
+
+
+class Job(MonthlyJob):
+    help = "Import postnrs. from bring."
+
+    def execute(self):
+        self.verbose = 0
+        self.force = 1
+        process_new_file(self)
 
 
 def main(args=None):
