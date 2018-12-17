@@ -43,7 +43,8 @@ setup(
     requires=[],
     install_requires=[
         'Django==1.7.11',
-        'South'
+        'requests',
+        'django-extensions'
     ],
     description=__doc__.strip(),
     classifiers=[line for line in classifiers.split('\n') if line],
