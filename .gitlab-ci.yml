@@ -58,3 +58,17 @@ wheel:
   artifacts:
     paths:
       - docs/badge-wheel.rst
+
+pages:
+  stage: doc
+  image: thebjorn/dktestpackage2:latest
+  script:
+    - dk build-docs
+  dependencies:
+    - coverage
+    - wheel
+  artifacts:
+    paths:
+      - public
+  only:
+    - master
