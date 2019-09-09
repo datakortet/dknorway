@@ -7,6 +7,7 @@ before_script:
   - python -V
   - pip -V
 
+
 py27:
   stage: run
   image: thebjorn/dktestpackage2:latest
@@ -16,6 +17,8 @@ py27:
   artifacts:
     paths:
       - build/*
+
+
 
 dj18:
   stage: run
@@ -27,15 +30,9 @@ dj18:
     paths:
       - build/*
 
-py3:
-  stage: run
-  image: thebjorn/dktestpackage3:latest
-  script:
-    - dk testpackage --ci
-  allow_failure: true
-  artifacts:
-    paths:
-      - build/*
+
+
+
 
 coverage:
   stage: build
@@ -45,7 +42,8 @@ coverage:
   coverage: '/TOTAL.+ ([0-9]{1,3}%)/'
   dependencies:
     - py27
-    - py3
+    - dj18
+    
   artifacts:
     paths:
       - build/coverage/*
