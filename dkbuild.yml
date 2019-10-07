@@ -1,0 +1,11 @@
+_schema: https://static.datakortet.no/schema/dkbuild.schema.yaml
+
+package:
+  name: dknorway
+  description: Models to hold Fylke, Kommune and PostSted + import script of file
+    from Bring (Posten).
+  version: 0.1.0
+  created: 2014
+
+build:
+  venv: dknorway
