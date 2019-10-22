@@ -35,6 +35,7 @@ class Fylke(models.Model):
         "Meta options for :model:`Fylke`."
         verbose_name_plural = 'Fylker'
         ordering = ['nr']
+        app_label = 'dknorway'
     
 
 class Kommune(models.Model):
@@ -56,6 +57,7 @@ class Kommune(models.Model):
         "Meta options for :model:`Kommune`."
         verbose_name_plural = 'Kommuner'
         ordering = ['kode']
+        app_label = 'dknorway'
     
 
 class PostSted(models.Model):
@@ -83,3 +85,4 @@ class PostSted(models.Model):
     class Meta:
         "Meta options for `model`:PostSted."
         verbose_name_plural = 'Poststed'
+        app_label = 'dknorway'
