@@ -22,6 +22,7 @@ DATAFILE = os.path.join(DATAFILE_DIR, 'postnrdata.txt')
 ENCODING = 'utf-8'
 
 
+
 class NoData(Exception):
     """No data to process.
     """
@@ -94,16 +95,50 @@ def mark_inactive(args, poststeds):
 
 
 def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):
+    def get_coordinates(csvfile):
+        import csv
+        coordinates = {}
+        with open(csvfile) as csv_file:
+            csv_reader = csv.reader(csv_file)
+            for row in csv_reader:
+                coordinates[row[0]] = (row[9], row[10])
+        return coordinates
+    
+    coordinates = get_coordinates('postnummer.csv')
+    
     def get_kommune(kode, navn):
         if kode not in knr_kommune:
             if args.verbose:
                 print("new kommune:", kode, navn)
             knr_kommune[kode] = Kommune.objects.create(kode=kode, navn=navn)
         return knr_kommune[kode]
-
+    
     for postnr, sted, kkode, knavn in lines:
+        print(postnr, sted, kkode, knavn, postnr in postnr_poststed)
         if postnr in postnr_poststed:  # update existing poststed
             p = postnr_poststed[postnr]
+            lat, lon = coordinates[postnr.encode('u8').lstrip('0')]
+            print(lat,lon)
+            
+            if not p.active:
+                p.delete()
+                postnr_poststed[postnr] = PostSted.objects.create(
+                    postnummer=postnr,
+                    poststed=sted,
+                    kommune=get_kommune(kode=kkode, navn=knavn),
+                    lat=lat,
+                    lng=lon,
+                    
+                )
+                continue
+            
+            if lat != p.lat:
+                p.lat = lat
+                p.lng = lon
+                p.save()
+                if args.verbose:
+                    print("updated poststed:", postnr, sted)
+                
 
             if sted != p.poststed:
                 p.poststed = sted
@@ -128,7 +163,9 @@ def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):
             postnr_poststed[postnr] = PostSted.objects.create(
                 postnummer=postnr,
                 poststed=sted,
-                kommune=get_kommune(kode=kkode, navn=knavn)
+                kommune=get_kommune(kode=kkode, navn=knavn),
+                lat=lat,
+                lng=lon,
             )
             if args.verbose:
                 print("created new poststed:", postnr, sted, kkode, knavn)
@@ -137,9 +174,9 @@ def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):
 def process_new_file(args):
     try:
         lines = list(fetch_datafile(args))
-        current_poststed = PostSted.objects.filter(active=True)
+        current_poststed = PostSted.objects.all()
         current_kommune = Kommune.objects.filter(active=True)
-        current_postnr = {p.postnummer for p in current_poststed}
+        current_postnr = {p.postnummer for p in current_poststed if p.active}
         new_postnrs = {line[0] for line in lines}
 
         inactive_postnr = current_postnr - new_postnrs
