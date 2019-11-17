@@ -4,9 +4,7 @@
    Updated by ./posten_postnrimport.py
 """
 
-# pylint: disable=W0232,R0903
-# W0232: META has no __init__
-# R0903: too few public methods
+# pylint: disable=no-init,too-few-public-methods,old-style-class
 
 
 from django.db import models
