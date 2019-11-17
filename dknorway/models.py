@@ -4,9 +4,7 @@
    Updated by ./posten_postnrimport.py
 """
 
-# pylint: disable=W0232,R0903
-# W0232: META has no __init__
-# R0903: too few public methods
+# pylint: disable=no-init,too-few-public-methods,old-style-class
 
 
 from django.db import models
@@ -35,6 +33,7 @@ class Fylke(models.Model):
         "Meta options for :model:`Fylke`."
         verbose_name_plural = 'Fylker'
         ordering = ['nr']
+        app_label = 'dknorway'
     
 
 class Kommune(models.Model):
@@ -56,6 +55,7 @@ class Kommune(models.Model):
         "Meta options for :model:`Kommune`."
         verbose_name_plural = 'Kommuner'
         ordering = ['kode']
+        app_label = 'dknorway'
     
 
 class PostSted(models.Model):
@@ -83,3 +83,4 @@ class PostSted(models.Model):
     class Meta:
         "Meta options for `model`:PostSted."
         verbose_name_plural = 'Poststed'
+        app_label = 'dknorway'
