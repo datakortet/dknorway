@@ -26,7 +26,8 @@ setuptools.setup(
     maintainer_email="bp@datakortet.no",
     requires=[],
     install_requires=[
-        'Django==1.7.11',
+        'Django',
+        # 'Django==1.7.11',
         'requests',
         'django-extensions'
     ],
