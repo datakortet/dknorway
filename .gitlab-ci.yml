@@ -31,9 +31,6 @@ dj18:
       - build/*
 
 
-
-
-
 coverage:
   stage: build
   image: thebjorn/dktestpackage2:latest
