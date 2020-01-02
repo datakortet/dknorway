@@ -11,7 +11,8 @@ from django.db import models
 
 
 class Fylke(models.Model):
-    "Model for all fylker in Norway."
+    """Model for Norwegian 'fylke'.
+    """
     nr = models.CharField(max_length=2, primary_key=True)
     navn = models.CharField(max_length=40)
     active = models.BooleanField(default=True)

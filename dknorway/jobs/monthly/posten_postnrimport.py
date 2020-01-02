@@ -22,10 +22,10 @@ DATAFILE = os.path.join(DATAFILE_DIR, 'postnrdata.txt')
 ENCODING = 'utf-8'
 
 
-
 class NoData(Exception):
     """No data to process.
     """
+
 
 def split_line(line):
     return [item.strip() for item in line.split('\t')]
@@ -41,6 +41,7 @@ def write_datafile(txt):
     datafile_exists()
     with open(DATAFILE, 'wb') as fp:
         fp.write(txt.encode(ENCODING))
+
 
 def read_datafile():
     datafile_exists()
