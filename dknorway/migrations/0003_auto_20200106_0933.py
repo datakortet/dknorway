@@ -4,6 +4,16 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 
 
+def deactivate_fylke(Fylke, nr, new_name):
+    try:
+        f = Fylke.objects.get(nr=nr)
+        f.active = False
+        f.note = new_name
+        f.save()
+    except Fylke.DoesNotExist:
+        pass
+
+
 def new_fylke_2020(apps, schema_editor):
     Fylke = apps.get_model("dknorway", "Fylke")
     f, _ = Fylke.objects.get_or_create(nr='30', navn='Viken')
@@ -28,80 +38,21 @@ def new_fylke_2020(apps, schema_editor):
     f.note = 'Troms, Finnmark'
     f.save()
 
-    f = Fylke.objects.get(nr='01')
-    f.active = False
-    f.note = 'Viken'
-    f.save()
-
-    f = Fylke.objects.get(nr='02')
-    f.active = False
-    f.note = 'Viken'
-    f.save()
-
-    f = Fylke.objects.get(nr='04')
-    f.active = False
-    f.note = 'Innlandet'
-    f.save()
-
-    f = Fylke.objects.get(nr='05')
-    f.active = False
-    f.note = 'Innlandet'
-    f.save()
-
-    f = Fylke.objects.get(nr='06')
-    f.active = False
-    f.note = 'Viken'
-    f.save()
-
-    f = Fylke.objects.get(nr='07')
-    f.active = False
-    f.note = 'Vestfold og Telemark'
-    f.save()
-
-    f = Fylke.objects.get(nr='08')
-    f.active = False
-    f.note = 'Vestfold og Telemark'
-    f.save()
-
-    f = Fylke.objects.get(nr='09')
-    f.active = False
-    f.note = 'Agder'
-    f.save()
-
-    f = Fylke.objects.get(nr='10')
-    f.active = False
-    f.note = 'Agder'
-    f.save()
-
-    f = Fylke.objects.get(nr='12')
-    f.active = False
-    f.note = 'Vestland'
-    f.save()
-
-    f = Fylke.objects.get(nr='14')
-    f.active = False
-    f.note = 'Vestland'
-    f.save()
-
-    f = Fylke.objects.get(nr='16')
-    f.active = False
-    f.note = 'Trøndelag'
-    f.save()
-
-    f = Fylke.objects.get(nr='17')
-    f.active = False
-    f.note = 'Trøndelag'
-    f.save()
-
-    f = Fylke.objects.get(nr='19')
-    f.active = False
-    f.note = 'Troms og Finnmark'
-    f.save()
-
-    f = Fylke.objects.get(nr='20')
-    f.active = False
-    f.note = 'Troms og Finnmark'
-    f.save()
+    deactivate_fylke(Fylke, '01', 'Viken')
+    deactivate_fylke(Fylke, '02', 'Viken')
+    deactivate_fylke(Fylke, '04', 'Innlandet')
+    deactivate_fylke(Fylke, '05', 'Innlandet')
+    deactivate_fylke(Fylke, '06', 'Viken')
+    deactivate_fylke(Fylke, '07', 'Vestfold og Telemark')
+    deactivate_fylke(Fylke, '08', 'Vestfold og Telemark')
+    deactivate_fylke(Fylke, '09', 'Agder')
+    deactivate_fylke(Fylke, '10', 'Agder')
+    deactivate_fylke(Fylke, '12', 'Vestland')
+    deactivate_fylke(Fylke, '14', 'Vestland')
+    deactivate_fylke(Fylke, '16', 'Trøndelag')
+    deactivate_fylke(Fylke, '17', 'Trøndelag')
+    deactivate_fylke(Fylke, '19', 'Troms og Finnmark')
+    deactivate_fylke(Fylke, '20', 'Troms og Finnmark')
 
 
 class Migration(migrations.Migration):
