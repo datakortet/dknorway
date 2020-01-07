@@ -18,8 +18,6 @@ py27:
     paths:
       - build/*
 
-
-
 dj18:
   stage: run
   image: thebjorn/dktestpackage2:latest
@@ -30,6 +28,15 @@ dj18:
     paths:
       - build/*
 
+py3:
+  stage: run
+  image: thebjorn/dktestpackage3:latest
+  script:
+    - dk testpackage --ci
+  allow_failure: false
+  artifacts:
+    paths:
+      - build/*
 
 coverage:
   stage: build
