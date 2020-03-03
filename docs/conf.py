@@ -234,7 +234,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'dknorway', u'dknorway Documentation',
-   u'', 'dknorway', 'One line description of project.',
+   u'', 'dknorway', 'Models to hold Fylke, Kommune and PostSted + import script of file from Bring (Posten).',
    'Miscellaneous'),
 ]
 
