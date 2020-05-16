@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 from dknorway.models import Fylke, Kommune, PostSted
 import pytest
 
@@ -31,7 +32,7 @@ def test_model_save():
     )
 
     p = PostSted.objects.get(postnummer='9999')
-    print p
+    print(p)
 
     assert p.poststed == PostSted.get('9999')
     assert '' == PostSted.get('1234')
