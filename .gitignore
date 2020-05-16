@@ -4,6 +4,8 @@
 *~
 \#*\#
 
+tests/dknorway-testing.db
+
 # no .svg at root
 /*.svg
 
