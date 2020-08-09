@@ -29,7 +29,8 @@ setuptools.setup(
         'Django',
         # 'Django==1.7.11',
         'requests',
-        'django-extensions'
+        "django-extensions==3.0.0  ;python_version < '3'"
+        "django-extensions>=3.0.0  ;python_version >= '3'"
     ],
     description=__doc__.strip(),
     classifiers=[line for line in classifiers.split('\n') if line],
