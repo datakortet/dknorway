@@ -10,12 +10,13 @@ Intended Audience :: Developers
 Programming Language :: Python
 Programming Language :: Python :: 2
 Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3
 Topic :: Software Development :: Libraries
 """
 
 import setuptools
 
-version = '0.1.2'
+version = '0.1.5'
 
 
 setuptools.setup(
