@@ -62,7 +62,7 @@ class PostSted(models.Model):
     "A poststed as defined by the Norwegian postal service."
     postnummer = models.CharField(max_length=4)
     poststed = models.CharField(max_length=35)
-    kommune = models.ForeignKey(Kommune, null=True, blank=True)
+    kommune = models.ForeignKey(Kommune, null=True, blank=True, on_delete=models.CASCADE)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
     active = models.BooleanField(default=True)
