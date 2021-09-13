@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-
-"""Models used for looking up poststed from postnr.
-   Updated by ./posten_postnrimport.py
+"""
+Models used for looking up poststed from postnr.
+Updated by ./posten_postnrimport.py
 """
 
 # pylint: disable=no-init,too-few-public-methods,old-style-class
@@ -27,7 +26,7 @@ class Fylke(models.Model):
         except PostSted.DoesNotExist:
             raise cls.DoesNotExist
 
-    def __unicode__(self):
+    def __str__(self):
         return self.navn
 
     class Meta:
@@ -44,7 +43,7 @@ class Kommune(models.Model):
     active = models.BooleanField(default=True)
     note = models.CharField(max_length=255, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s (%s)' % (self.navn, self.fylke)
 
     @property
@@ -69,7 +68,7 @@ class PostSted(models.Model):
     active = models.BooleanField(default=True)
     note = models.CharField(max_length=255, null=True, blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s %s' % (self.postnummer, self.poststed)
 
     @staticmethod
