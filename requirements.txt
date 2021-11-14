@@ -1,4 +1,4 @@
-django==1.8.19
+django==2.2.24
 requests==2.23.0
 pytest-django==3.10.0
 django-extensions>=3.0.0       # WARNING[dkt]: django-extensions>=3.0.0 is not sepcified in requirements-external.txt
