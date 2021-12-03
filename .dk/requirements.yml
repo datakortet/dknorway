@@ -1,0 +1,9 @@
+build:
+  django: 1.8.19
+  requests: 2.23.0
+
+run:
+  django-extensions: ">=3.0.0"
+
+tests:
+  pytest-django: 3.10.0
