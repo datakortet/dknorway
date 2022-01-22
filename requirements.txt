@@ -1,5 +1,5 @@
-django==1.8.19
+django==1.8.19                 ; python_version < '3.6'
+django==1.9.13                 ; python_version >= '3.6'
 requests==2.23.0
 pytest-django==3.10.0
-django-extensions>=3.0.0       # WARNING[dkt]: django-extensions>=3.0.0 is not sepcified in requirements-external.txt
-
+django-extensions>=3.0.0

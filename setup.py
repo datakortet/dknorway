@@ -27,7 +27,6 @@ setuptools.setup(
     requires=[],
     install_requires=[
         'Django',
-        # 'Django==1.7.11',
         'requests',
         "django-extensions==2.1.0",
     ],
