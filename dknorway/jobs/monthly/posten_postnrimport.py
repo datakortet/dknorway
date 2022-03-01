@@ -13,6 +13,9 @@ from dknorway.models import Kommune, PostSted
 from dknorway import __version__
 import dknorway
 from django_extensions.management.jobs import MonthlyJob
+from dk.collections import pset
+from dkddog import Fido
+fido = Fido('dknorway.import_postnummer')
 
 CURDIR = os.path.dirname(__file__)
 SRCDIR = os.path.dirname(dknorway.__file__)
@@ -74,6 +77,10 @@ def fetch_datafile(args):
 
         write_datafile(txt)
     elif args.verbose:
+        fido.info_event(
+            "Finished fetching datafile",
+            "Data has not changed since last run."
+        )
         print("data has not changed since last run (use --force to override)")
         raise NoData()
 
@@ -105,7 +112,7 @@ def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):
                 coordinates[row[0]] = (row[9], row[10])
         return coordinates
     
-    coordinates = get_coordinates('postnummer.csv')
+    coordinates = get_coordinates(os.path.join(CURDIR, 'postnummer.csv'))
     
     def get_kommune(kode, navn):
         if kode not in knr_kommune:
@@ -194,17 +201,31 @@ def process_new_file(args):
             {k.kode: k for k in current_kommune}
         )
         create_postnrcache_py(PostSted.objects.filter(active=True).values_list('postnummer', flat=True))
+        fido.info_event(
+            "Finished processing file",
+        )
+        
     except NoData:
         pass
 
 
 class Job(MonthlyJob):
     help = "Import postnrs. from bring."
-
-    def execute(self):
-        self.verbose = 0
-        self.force = 1
-        process_new_file(self)
+    
+    def execute(self):      # you shouldn't need to change this method
+        start = time.time()
+        fido.info_event('started')
+        
+        args = pset(verbose=0, force=1)
+        
+        try:
+            process_new_file(args)
+            fido.service_ok()
+        except:
+            fido.service_critical(traceback.format_exc())
+        else:
+            fido.success_event('finished')
+            fido.report_duration(time.time() - start)
 
 
 def main(args=None):
