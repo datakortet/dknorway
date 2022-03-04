@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-"""Importer postnr fra postens ofisielle URL.
 """
-from __future__ import print_function
+Importer postnr fra postens offisielle URL.
+"""
 import sys, os
 import time
-import codecs
+import traceback
 import requests
 import argparse
 import django;django.setup()
