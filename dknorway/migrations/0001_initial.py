@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('poststed', models.CharField(max_length=35)),
                 ('lat', models.FloatField(null=True, blank=True)),
                 ('lng', models.FloatField(null=True, blank=True)),
-                ('kommune', models.ForeignKey(blank=True, to='dknorway.Kommune', null=True)),
+                ('kommune', models.ForeignKey(blank=True, to='dknorway.Kommune', null=True, on_delete=models.deletion.CASCADE)),
             ],
             options={
                 'verbose_name_plural': 'Poststed',
