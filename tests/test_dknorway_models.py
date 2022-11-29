@@ -1,22 +1,18 @@
-# -*- coding: utf-8 -*-
-from __future__ import print_function
+"""Test dknorway models.
+"""
 
-import sys
-
-from dknorway.models import Fylke, Kommune, PostSted
 import pytest
 
+from dknorway.models import Fylke, Kommune, PostSted
 
-@pytest.mark.django_db
-def test_model_save():
+
+def test_model_save(db):
     Fylke.objects.create(
         nr='01',
         navn="Lappland"
     )
     f = Fylke.objects.get(nr='01')
     assert f.navn == 'Lappland'
-    if sys.version_info.major < 3:
-        assert unicode(f) == 'Lappland'
 
     Kommune.objects.create(
         kode='0110',
@@ -25,8 +21,6 @@ def test_model_save():
     k = Kommune.objects.get(kode='0110')
     assert k.navn == 'Gokk'
     assert k.fylke.navn == 'Lappland'
-    if sys.version_info.major < 3:
-        assert unicode(k) == 'Gokk (Lappland)'
 
     PostSted.objects.create(
         postnummer='9999',
