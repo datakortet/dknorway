@@ -44,7 +44,7 @@ class Kommune(models.Model):
     note = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return '{} ({})'.format(self.navn, self.fylke)
+        return f'{self.navn} ({self.fylke})'
 
     @property
     def fylke(self):
@@ -69,7 +69,7 @@ class PostSted(models.Model):
     note = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return '{} {}'.format(self.postnummer, self.poststed)
+        return f'{self.postnummer} {self.poststed}'
 
     @staticmethod
     def get(nr):
