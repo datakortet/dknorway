@@ -44,7 +44,7 @@ class Kommune(models.Model):
     note = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return '%s (%s)' % (self.navn, self.fylke)
+        return '{} ({})'.format(self.navn, self.fylke)
 
     @property
     def fylke(self):
@@ -69,7 +69,7 @@ class PostSted(models.Model):
     note = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return '%s %s' % (self.postnummer, self.poststed)
+        return '{} {}'.format(self.postnummer, self.poststed)
 
     @staticmethod
     def get(nr):
@@ -78,7 +78,7 @@ class PostSted(models.Model):
             ps = PostSted.objects.get(postnummer=nr)
             return ps.poststed
         except PostSted.DoesNotExist:
-            return u''
+            return ''
         
     class Meta:
         "Meta options for `model`:PostSted."

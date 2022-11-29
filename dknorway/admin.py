@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """Admin site for `app`:ajax.
 """
 
