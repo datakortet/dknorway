@@ -8,14 +8,13 @@ classifiers = """\
 Development Status :: 3 - Alpha
 Intended Audience :: Developers
 Programming Language :: Python
-Programming Language :: Python :: 2
-Programming Language :: Python :: 2.7
+Programming Language :: Python :: 3
 Topic :: Software Development :: Libraries
 """
 
 import setuptools
 
-version = '0.1.3'
+version = '0.1.4'
 
 
 setuptools.setup(

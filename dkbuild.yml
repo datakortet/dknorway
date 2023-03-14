@@ -4,7 +4,7 @@ package:
   name: dknorway
   description: Models to hold Fylke, Kommune and PostSted + import script of file
     from Bring (Posten).
-  version: 0.1.3
+  version: 0.1.4
   created: 2014
 
 build:
