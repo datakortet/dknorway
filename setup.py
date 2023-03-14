@@ -14,7 +14,7 @@ Topic :: Software Development :: Libraries
 
 import setuptools
 
-version = '0.1.4'
+version = '0.1.5'
 
 
 setuptools.setup(
@@ -33,5 +33,6 @@ setuptools.setup(
     classifiers=[line for line in classifiers.split('\n') if line],
     long_description=open('README.rst').read(),
     packages=setuptools.find_packages(exclude=['tests']),
+    include_package_data=True,
     zip_safe=False,
 )

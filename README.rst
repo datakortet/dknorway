@@ -27,7 +27,6 @@ Various basic packages pulled from our source tree.
 .. image:: https://codecov.io/gl/norsktest/dknorway/branch/master/graph/badge.svg?token=JJ8CWR14SV
   :target: https://codecov.io/gl/norsktest/dknorway
 
-.. include:: badge-wheel.rst
 
 Documentation
 -------------
