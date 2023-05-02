@@ -27,7 +27,7 @@ setuptools.setup(
     install_requires=[
         'Django',
         'requests',
-        "django-extensions==2.1.0",
+        "django-extensions==2.2.9",
     ],
     description=__doc__.strip(),
     classifiers=[line for line in classifiers.split('\n') if line],
