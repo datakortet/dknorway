@@ -11,6 +11,7 @@ def pytest_configure():
     settings.configure(
         DEBUG=True,
         TESTING=True,
+        SECRET_KEY='test',
         CACHES={
             'default': {
                 'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -35,7 +36,6 @@ def pytest_configure():
         INSTALLED_APPS=(
             'django.contrib.auth',
             'django.contrib.contenttypes',
-            'django.contrib.sessions',
             'django.contrib.admin',
             'dknorway',
             #'myapp.tests',
