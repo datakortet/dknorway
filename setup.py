@@ -12,7 +12,7 @@ Programming Language :: Python :: 3
 Topic :: Software Development :: Libraries
 """
 
-import setuptools
+import setuptools  # noqa: E402
 
 version = '0.1.5'
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations  # noqa: F401
 
 
 def deactivate_fylke(Fylke, nr, new_name):

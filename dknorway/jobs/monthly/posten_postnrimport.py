@@ -1,19 +1,23 @@
 """
 Importer postnr fra postens offisielle URL.
 """
-import sys, os
+import sys
+import os
 import time
 import traceback
 import requests
 import argparse
-import django;django.setup()
-from django import template
-from dknorway.models import Kommune, PostSted
-from dknorway import __version__
-import dknorway
-from django_extensions.management.jobs import MonthlyJob
-from dk.collections import pset
-from dkddog import Fido
+import django
+django.setup()
+
+from django import template  # noqa: E402
+from django_extensions.management.jobs import MonthlyJob  # noqa: E402
+from dk.collections import pset  # noqa: E402
+from dkddog import Fido  # noqa: E402
+from dknorway.models import Kommune, PostSted  # noqa: E402
+from dknorway import __version__  # noqa: E402
+import dknorway  # noqa: E402
+
 fido = Fido('dknorway.import_postnummer')
 
 CURDIR = os.path.dirname(__file__)
@@ -88,9 +92,9 @@ def create_postnrcache_py(postnr):
     postnrs = [int(p) for p in sorted(set(postnr))]
     with open(os.path.join(CURDIR, 'postnrcache.pytempl')) as fp:
         t = template.Template(fp.read().decode('u8'))
-    
+
     with open(os.path.join(SRCDIR, 'postnrcache.py'), 'w') as fp:
-        fp.write(unicode(t.render(template.Context(locals()))).encode('u8'))
+        fp.write(str(t.render(template.Context(locals()))).encode('u8'))
 
 
 def mark_inactive(args, poststeds):
@@ -101,7 +105,7 @@ def mark_inactive(args, poststeds):
         p.save()
 
 
-def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):
+def add_and_update_poststeds(args, lines, postnr_poststed, knr_kommune):  # noqa: C901
     def get_coordinates(csvfile):
         import csv
         coordinates = {}
@@ -220,7 +224,7 @@ class Job(MonthlyJob):
         try:
             process_new_file(args)
             fido.service_ok()
-        except:
+        except Exception:
             fido.service_critical(traceback.format_exc())
         else:
             fido.success_event('finished')
